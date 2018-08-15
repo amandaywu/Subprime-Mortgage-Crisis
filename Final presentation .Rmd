@@ -1,0 +1,150 @@
+---
+title: "STAT133 Final project Amanda's Data"
+author: "Amanda Wu"
+date: "May 1"
+output: 
+  html_document:
+    fig_height: 4
+    fig_width: 8
+---
+<!-- Don't edit in between this line and the one below -->
+```{r include=FALSE}
+# Don't delete this chunk if you are using the DataComputing package
+library(DataComputing)
+library(tidyr)
+library(ggplot2)
+library(dplyr)
+library(maps)
+```
+*Source file* 
+```{r, results='asis', echo=FALSE}
+includeSourceDocuments()
+```
+<!-- Don't edit the material above this line -->
+
+```{r}
+# load 2008 data
+total <- read.csv("us_total.csv")
+# collect unemployment table
+unem <- total %>% select(sta, pct_unem_2008) 
+unem$pct_unem_2008 <- as.numeric(gsub("%", "",unem$pct_unem_2008))
+# group the table by state
+unem <- unem %>%
+  group_by(sta) %>% 
+  summarise(mean_unem = mean(pct_unem_2008, na.rm=TRUE))
+
+region = c("alaska","alabama","arkansas","arizona","california","colorado","connecticut","district of columbia","delaware","florida","georgia","hawaii","iowa","idaho","illinois","indiana","kansas","kentucky","louisiana","massachusetts","maryland","maine","michigan","minnesota","missouri","mississippi","montana","north carolina","north dakota", "nebraska","new hampshire", "new jersey","new mexico", "nevada", "new york", "ohio","oklahoma","oregon","pennsylvania","puerto rico","rhode island", "south carolina","south dakota","tennessee","texas","utah","virginia","vermont", "washington", "wisconsin", "west virginia","wyoming")
+
+# load U.S. map data
+all_states <- map_data("state")
+# merge by states
+unem <- unem %>% mutate(region)
+unem_total <- merge(all_states, unem, by = "region")
+                                                           
+# plot all states with ggplot 
+unem_map1 <- ggplot() + geom_polygon(data = unem_total, aes(x = long, y = lat, group = group, fill = unem_total$mean_unem), col = "white") + scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar")
+
+unem_map2 <- unem_map1 + theme_bw() + labs(fill = "Unemployment Rate", title = "Average Unemployment Rate by State in 2008")
+
+unem_map3 <- unem_map2 + scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) + theme(panel.border = element_blank())
+                                                            
+unem_map3
+```
+
+```{r}
+# load data for unemployment rate in 2006 before the crisis
+unem_06 <- read.csv("/Users/AmandaWu/Desktop/unemployment-06.csv")
+unem_06 <- unem_06 %>% select(state, unemployment_rate) 
+
+# group the table by state
+unem_06 <- unem_06 %>%
+  group_by(state) %>% 
+  summarise(mean_06 = mean(unemployment_rate, na.rm=TRUE))
+
+summarise(unem_06)
+
+
+# merge by states
+region = c("alaska","alabama","arkansas","arizona","california","colorado","connecticut","district of columbia","delaware","florida","georgia","hawaii","iowa","idaho","illinois","indiana","kansas","kentucky","louisiana","massachusetts","maryland","maine","michigan","minnesota","missouri","mississippi","montana","north carolina","north dakota", "nebraska","new hampshire", "new jersey","new mexico", "nevada", "new york", "ohio","oklahoma","oregon","pennsylvania","rhode island", "south carolina","south dakota","tennessee","texas","utah","virginia","vermont", "washington", "wisconsin", "west virginia","wyoming")
+unem_06 <- unem_06 %>% mutate(region)
+
+unem_total_06 <- merge(all_states, unem_06, by = "region")
+
+# plot all states with ggplot 
+unem_map1_06 <- ggplot() + geom_polygon(data = unem_total_06, aes(x = long, y = lat, group = group, fill = unem_total_06$mean_06), col = "white") + scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar")
+
+unem_map2_06 <- unem_map1_06 + theme_bw() + labs(fill = "Unemployment Rate", title = "Average Unemployment Rate by State in 2006")
+
+unem_map3_06 <- unem_map2_06 + scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) + theme(panel.border = element_blank())
+                                                            
+unem_map3_06
+
+```
+
+
+
+```{r}
+# load data for unemployment rate in 2009 after the crisis
+unem_09 <- read.csv("/Users/AmandaWu/Desktop/unemployment-09.csv")
+unem_09 <- unem_09 %>% select(state, unemployment_rate) 
+
+# group the table by state
+unem_09 <- unem_09 %>%
+  group_by(state) %>% 
+  summarise(mean_09 = mean(unemployment_rate, na.rm=TRUE))
+
+summarise(unem_09)
+
+
+# merge by states
+unem_09 <- unem_09 %>% mutate(region)
+unem_total_09 <- merge(all_states, unem_09, by = "region")
+
+# plot unemployment rates for all states with ggplot 
+unem_map1_09 <- ggplot() + geom_polygon(data = unem_total_09, aes(x = long, y = lat, group = group, fill = unem_total_09$mean_09), col = "white") + scale_fill_continuous(low = "thistle2", high = "darkred", guide="colorbar")
+
+unem_map2_09 <- unem_map1_09 + theme_bw() + labs(fill = "Unemployment Rate", title = "Average Unemployment Rate by State in 2009")
+
+unem_map3_09 <- unem_map2_09 + scale_y_continuous(breaks = c()) + scale_x_continuous(breaks = c()) + theme(panel.border = element_blank())
+                                                            
+unem_map3_09
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
